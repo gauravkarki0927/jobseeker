@@ -25,25 +25,44 @@ const AdminPanel = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Fetch jobs
-      const jobsResponse = await fetch(`${API_BASE}/jobs`);
-      let jobsData = [];
-      if (jobsResponse.ok) {
-        jobsData = await jobsResponse.json();
-        setJobs(jobsData);
-      }
-      // Calculate stats safely
+      // Run both API calls in parallel
+      const [jobsResponse, usersResponse] = await Promise.all([
+        fetch(`${API_BASE}/jobs`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+        }),
+        fetch(`${API_BASE}/admin/users`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+        })
+      ]);
+
+      const jobsData = jobsResponse.ok ? await jobsResponse.json() : { jobs: [] };
+      const usersData = usersResponse.ok ? await usersResponse.json() : { users: [] };
+
+      // Store data in state
+      setJobs(jobsData.jobs || []);
+      setUsers(Array.isArray(usersData) ? usersData : usersData.users || []);
+
       setStats({
-        totalJobs: jobsData?.length || 0,
-        totalUsers: mockUsers?.length || 0,
-        totalApplications: 45, // Mock data
-        activeJobs: jobsData?.filter(job => {
+        totalJobs: jobsData.pagination?.totalJobs || 0,
+        totalUsers: usersData.length || 0,
+        totalApplications: 45,
+        activeJobs: (jobsData.jobs || []).filter(job => {
           const postedDate = new Date(job.postedDate || Date.now());
           const thirtyDaysAgo = new Date();
           thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
           return postedDate > thirtyDaysAgo;
-        }).length || 0
+        }).length
       });
+
+
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -188,7 +207,7 @@ const AdminPanel = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {jobs?.length > 0 ? (
                     jobs.map(job => (
-                      <tr key={job.id || job._id}>
+                      <tr key={job.id}>
                         <td>{job.title || 'N/A'}</td>
                         <td>{job.company || 'N/A'}</td>
                         <td>{job.jobType || 'N/A'}</td>
@@ -196,7 +215,7 @@ const AdminPanel = () => {
                         <td>{new Date(job.postedDate || Date.now()).toLocaleDateString()}</td>
                         <td>
                           <button><Edit /></button>
-                          <button onClick={() => handleDeleteJob(job.id || job._id)}><Trash2 /></button>
+                          <button onClick={() => handleDeleteJob(job.id)}><Trash2 /></button>
                         </td>
                       </tr>
                     ))

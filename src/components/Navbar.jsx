@@ -17,8 +17,8 @@ const Navbar = () => {
 
   const navigation = [
     { name: 'Jobs', href: '/' },
-    { name: 'Companies', href: '/companies' },
     { name: 'About Us', href: '/about' },
+    { name: 'Companies', href: '/companies' },
     { name: 'Contact Us', href: '/contact' },
   ];
 
@@ -57,7 +57,7 @@ const Navbar = () => {
                   <User className="h-5 w-5" />
                   <span className="text-sm font-medium">{user.firstName}</span>
                 </button>
-                
+
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <Link

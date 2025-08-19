@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Search, Briefcase, Users, TrendingUp } from 'lucide-react';
 import SearchFilters from '../components/SearchFilters';
 import JobCard from '../components/JobCard';
-import Footer from '../components/Footer';
 
 const LandingPage = () => {
   const [jobs, setJobs] = useState([]);
@@ -23,7 +22,7 @@ const LandingPage = () => {
       const response = await fetch(`${API_BASE}/jobs`);
       if (response.ok) {
         const data = await response.json();
-        setJobs(data);
+        setJobs(data.jobs || []);
       }
     } catch (error) {
       console.error('Error fetching jobs:', error);

@@ -1,5 +1,4 @@
 import React from 'react';
-import Footer from '../components/Footer';
 
 const CompaniesPage = () => {
   const companies = ['Google', 'Microsoft', 'Apple', 'Amazon', 'Facebook', 'Netflix', 'Tesla', 'Uber'];

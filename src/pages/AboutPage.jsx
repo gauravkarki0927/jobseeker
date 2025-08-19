@@ -1,6 +1,5 @@
 import React from 'react';
 import { Search, Users, TrendingUp } from 'lucide-react';
-import Footer from '../components/Footer';
 
 const AboutPage = () => {
   return (
