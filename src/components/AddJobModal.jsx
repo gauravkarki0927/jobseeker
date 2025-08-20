@@ -35,8 +35,7 @@ const AddJobModal = ({ onClose, onSubmit }) => {
     try {
       const jobData = {
         ...formData,
-        salary: parseInt(formData.salary),
-        postedDate: new Date().toISOString()
+        salary: parseInt(formData.salary)
       };
       await onSubmit(jobData);
     } catch (error) {

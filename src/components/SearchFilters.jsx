@@ -26,7 +26,7 @@ const SearchFilters = ({ filters, onFilterChange }) => {
   const seniorityLevels = ['Intern', 'Junior', 'Mid-Level', 'Senior'];
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-[2px] shadow-md p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center">
           <Filter className="h-5 w-5 mr-2" />
@@ -47,7 +47,7 @@ const SearchFilters = ({ filters, onFilterChange }) => {
           <select
             value={filters.jobType}
             onChange={(e) => handleFilterChange('jobType', e.target.value)}
-            className="w-full border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All Types</option>
             {jobTypes.map((type) => (
@@ -62,7 +62,7 @@ const SearchFilters = ({ filters, onFilterChange }) => {
           <select
             value={filters.employmentType}
             onChange={(e) => handleFilterChange('employmentType', e.target.value)}
-            className="w-full border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All Types</option>
             {employmentTypes.map((type) => (
@@ -77,7 +77,7 @@ const SearchFilters = ({ filters, onFilterChange }) => {
           <select
             value={filters.seniorityLevel}
             onChange={(e) => handleFilterChange('seniorityLevel', e.target.value)}
-            className="w-full border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All Levels</option>
             {seniorityLevels.map((level) => (
@@ -92,7 +92,7 @@ const SearchFilters = ({ filters, onFilterChange }) => {
           <select
             value={filters.isRemote}
             onChange={(e) => handleFilterChange('isRemote', e.target.value)}
-            className="w-full border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All</option>
             <option value="remote">Remote</option>
@@ -108,27 +108,29 @@ const SearchFilters = ({ filters, onFilterChange }) => {
             placeholder="Enter city or state"
             value={filters.location}
             onChange={(e) => handleFilterChange('location', e.target.value)}
-            className="w-full border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
         {/* Salary Range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Salary Range</label>
+          <label className="block text-sm font-medium text-gray-700 mb-3">Salary Range (Rs.)</label>
           <div className="grid grid-cols-2 gap-3">
             <input
               type="number"
               placeholder="Min"
+              min={0}
               value={filters.minSalary}
               onChange={(e) => handleFilterChange('minSalary', e.target.value)}
-              className="border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <input
               type="number"
               placeholder="Max"
+              min={0}
               value={filters.maxSalary}
               onChange={(e) => handleFilterChange('maxSalary', e.target.value)}
-              className="border border-gray-300 outline-none rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="border border-gray-300 outline-none rounded-[2px] px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>

@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import CompaniesPage from "./pages/CompaniesPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import { Toaster } from "react-hot-toast";
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -29,6 +30,7 @@ function AppContent() {
     <Router>
       <ScrollToTop />
       <div className="min-h-screen bg-white">
+        <Toaster />
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />

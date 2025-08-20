@@ -26,7 +26,7 @@ const authenticateToken = async (req, res, next) => {
     next();
   } catch (error) {
     console.error('JWT Error:', error.message);
-    return res.status(403).json({ message: 'Invalid or expired token' });
+    return res.status(403).json({ message: 'Please login first' });
   }
 };
 
