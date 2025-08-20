@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MapPin, Clock, Wallet, Calendar, Building2 } from "lucide-react";
 import toast from "react-hot-toast";
+import API_BASE from '../services/API_BASE';
 
 const JobCard = ({ job }) => {
   const [applying, setApplying] = useState(false);
@@ -13,7 +14,6 @@ const JobCard = ({ job }) => {
     cv: null,
   });
 
-  const API_BASE = "http://localhost:5000/api/jobs"; // adjust backend URL
   const isLoggedIn = Boolean(localStorage.getItem("token")); // ✅ check login status
 
   const formatSalary = (salary) => {
@@ -25,7 +25,13 @@ const JobCard = ({ job }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+    // Normalize to "date only" (ignore hours, minutes, seconds)
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const postDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    // Difference in days (based on calendar dates, not hours)
+    const diffInDays = Math.floor((today - postDate) / (1000 * 60 * 60 * 24));
 
     if (diffInDays === 0) return "Today";
     if (diffInDays === 1) return "Yesterday";
@@ -33,6 +39,7 @@ const JobCard = ({ job }) => {
     if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
     return `${Math.floor(diffInDays / 30)} months ago`;
   };
+
 
   const getJobTypeColor = (jobType) => {
     const colors = {
@@ -56,8 +63,42 @@ const JobCard = ({ job }) => {
     return colors[level] || "bg-gray-100 text-gray-800";
   };
 
+  const [errors, setErrors] = useState({}); // validation errors
+
+  // Validation regex
+  const nameRegex = /^[A-Za-z\s'-]+$/; // only alphabets, spaces, hyphen, apostrophe
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z.-]+\.[a-zA-Z]{2,}$/;
+
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (!nameRegex.test(formData.name.trim())) {
+      newErrors.name = "Name must only contain alphabets";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email.trim())) {
+      newErrors.email = "Invalid email format";
+    }
+
+    if (!formData.cv) {
+      newErrors.cv = "Please upload your CV";
+    } else if (formData.cv.type !== "application/pdf") {
+      newErrors.cv = "Only PDF files are allowed";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleApply = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return; // stop if validation fails
+
     setApplying(true);
 
     try {
@@ -66,7 +107,7 @@ const JobCard = ({ job }) => {
       formDataToSend.append("email", formData.email);
       formDataToSend.append("cv", formData.cv);
 
-      const response = await fetch(`${API_BASE}/${job.id}/apply`, {
+      const response = await fetch(`${API_BASE}/jobs/${job.id}/apply`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -77,17 +118,18 @@ const JobCard = ({ job }) => {
       if (response.ok) {
         setApplied(true);
         setShowForm(false);
-        toast.success("Application submitted successfully!");
+        toast.success("Application submitted successfully!", {position: "top-right",autoClose: 5000});
       } else {
-        setShowForm(false);
+        toast.error("Failed to submit application.", {position: "top-right", autoClose: 5000});
       }
     } catch (err) {
       console.error("Error applying:", err);
-      toast.error("Something went wrong.");
+      toast.error("Something went wrong.", {position: "top-right", autoClose: 5000});
     } finally {
       setApplying(false);
     }
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 border border-gray-200">
@@ -197,11 +239,10 @@ const JobCard = ({ job }) => {
                   setShowForm(true);
                 }}
                 disabled={applying || applied}
-                className={`px-6 py-2 rounded-[2px] font-medium transition-colors ${
-                  applied
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-green-600 text-white hover:bg-green-700"
-                }`}
+                className={`px-6 py-2 rounded-[2px] font-medium transition-colors ${applied
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-green-500 text-white hover:bg-green-600"
+                  }`}
               >
                 {applying ? "Applying..." : applied ? "Applied" : "Apply Now"}
               </button>
@@ -218,49 +259,65 @@ const JobCard = ({ job }) => {
               Apply for {job.title}
             </h3>
             <form onSubmit={handleApply} className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-                className="border rounded-[4px] outline-none px-3 py-2"
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                required
-                className="border rounded-[4px] outline-none px-3 py-2"
-              />
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={(e) =>
-                  setFormData({ ...formData, cv: e.target.files[0] })
-                }
-                required
-                className="border rounded-lg px-3 py-2"
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="border rounded-[4px] outline-none px-3 py-2 w-full"
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="border rounded-[4px] outline-none px-3 py-2 w-full"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="cv" className="bg-gray-100 text-[14px] rounded-[2px] hover:shadow-md cursor-pointer px-3 py-2 w-full">Upload CV</label>
+                <input id="cv"
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) =>
+                    setFormData({ ...formData, cv: e.target.files[0] })
+                  }
+                  className="hidden"
+                />
+                {errors.cv && (
+                  <p className="text-red-500 text-sm mt-2">{errors.cv}</p>
+                )}
+              </div>
+
               <div className="flex justify-end gap-3 mt-4">
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 rounded-[2px] outline-none border border-gray-300 text-gray-700 hover:bg-gray-100"
+                  className="px-2 py-1 rounded-[2px] outline-none bg-red-600 text-white hover:bg-red-700"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={applying}
-                  className="px-4 py-2 rounded-[2px] outline-none bg-blue-600 text-white hover:bg-blue-700"
+                  className="px-2 py-1 rounded-[2px] outline-none bg-green-500 text-white hover:bg-green-600"
                 >
-                  {applying ? "Submitting..." : "Submit"}
+                  {applying ? "Applying..." : "Apply"}
                 </button>
               </div>
             </form>

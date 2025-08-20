@@ -31,8 +31,8 @@ export default function Footer() {
           {/* Logo/Name section */}
           <div className="group">
             <div className="flex items-center space-x-2 mb-6">
-              <Briefcase className="transform group-hover:rotate-12 transition duration-500 h-8 w-8 text-white" />
-              <h2 className="text-2xl font-bold text-blue-600">
+              <Briefcase className="transform group-hover:rotate-12 transition duration-500 h-8 w-8 text-green-500" />
+              <h2 className="text-2xl font-bold text-green-500">
                 <span className="text-white">Job</span>Seeker
               </h2>
             </div>
@@ -44,21 +44,21 @@ export default function Footer() {
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:shadow-lg hover:shadow-black-500/30 transition-all duration-300"
               >
-                <Github className="w-5 h-5" />
+                <Github className="w-5 text-black h-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-sky-500 hover:shadow-lg hover:shadow-sky-500/30 transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300"
               >
-                <Youtube className="w-5 h-5" />
+                <Youtube className="w-5 text-red-600 h-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-purple-500 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300"
               >
-                <Facebook className="w-5 h-5" />
+                <Facebook className="w-5 text-blue-600 h-5" />
               </a>
             </div>
           </div>
@@ -79,9 +79,9 @@ export default function Footer() {
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    className="text-gray-300 hover:text-white hover:pl-2 transition-all duration-300 flex items-center"
+                    className="text-gray-300 hover:text-green-600 hover:pl-2 transition-all duration-300 flex items-center"
                   >
-                    <span className="w-1 h-1 bg-blue-500 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition duration-300"></span>
+                    <span className="w-1 h-1 bg-gren-600 rounded-full mr-2 opacity-0 group-hover:opacity-100 transition duration-300"></span>
                     {link.name}
                   </a>
                 </li>
@@ -96,15 +96,15 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <div className="flex-shrink-0 mt-1">
-                  <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center animate-pulse">
-                    <Mail className="w-4 h-4 text-blue-400" />
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center animate-pulse">
+                    <Mail className="w-4 h-4 text-green-600" />
                   </div>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm text-gray-300">Email</p>
                   <a
                     href="mailto:support@jobseeker.com"
-                    className="text-white hover:text-blue-400 transition"
+                    className="text-white hover:text-green-600 transition"
                   >
                     support@jobseeker.com
                   </a>
@@ -113,15 +113,15 @@ export default function Footer() {
 
               <li className="flex items-start">
                 <div className="flex-shrink-0 mt-1">
-                  <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center animate-pulse [animation-delay:0.2s]">
-                    <Phone className="w-4 h-4 text-blue-400" />
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center animate-pulse [animation-delay:0.2s]">
+                    <Phone className="w-4 h-4 text-green-600" />
                   </div>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm text-gray-300">Phone</p>
                   <a
                     href="tel:+9779812345678"
-                    className="text-white hover:text-blue-400 transition"
+                    className="text-white hover:text-green-600 transition"
                   >
                     +977 9812345678
                   </a>
@@ -141,11 +141,11 @@ export default function Footer() {
                 <input
                   type="email"
                   placeholder="Your email"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-[2px] py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 text-white"
+                  className="w-full bg-gray-800 border border-gray-700 rounded-[2px] py-3 px-4 outline-none focus:border-green-600 placeholder-gray-100 text-white"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 hover:bg-blue-600 text-white rounded-[4px] px-4 py-1 transition"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-500 hover:bg-green-600 text-white rounded-[4px] px-4 py-1 transition"
                 >
                   <Send className="w-5 h-5" />
                 </button>

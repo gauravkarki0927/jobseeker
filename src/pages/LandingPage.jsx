@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, Briefcase, Users, TrendingUp } from 'lucide-react';
 import SearchFilters from '../components/SearchFilters';
 import JobCard from '../components/JobCard';
+import API_BASE from '../services/API_BASE';
+
 
 const LandingPage = () => {
   const [jobs, setJobs] = useState([]);
@@ -11,8 +13,6 @@ const LandingPage = () => {
   const [filters, setFilters] = useState({
     jobType: '', employmentType: '', seniorityLevel: '', location: '', isRemote: '', minSalary: '', maxSalary: ''
   });
-
-  const API_BASE = 'http://localhost:5000/api';
 
   useEffect(() => { fetchJobs(); }, []);
   useEffect(() => { filterJobs(); }, [jobs, searchTerm, filters]);
@@ -138,7 +138,7 @@ const LandingPage = () => {
       <div className="py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Find Your <span className="text-blue-600">Dream Job</span> Today
+            Find Your <span className="text-green-600">Dream Job</span> Today
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
             Discover thousands of job opportunities from top companies around the world.
@@ -172,7 +172,7 @@ const LandingPage = () => {
                   </ul>
                 )}
               </div>
-              <button className="bg-blue-600 text-white px-8 py-3 rounded-[2px] hover:bg-blue-700 transition-colors font-medium">
+              <button className="bg-green-500 text-white px-8 py-3 rounded-[2px] hover:bg-green-600 transition-colors font-medium">
                 Search Jobs
               </button>
             </div>

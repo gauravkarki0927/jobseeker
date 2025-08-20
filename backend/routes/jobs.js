@@ -1,8 +1,11 @@
 const express = require('express');
 const db = require('../config/database');
 const { authenticateToken } = require('../middleware/auth');
+const multer = require("multer");
+const path = require("path");
 
 const router = express.Router();
+router.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Get all jobs with filters
 router.get('/', async (req, res) => {
@@ -53,7 +56,7 @@ router.get('/', async (req, res) => {
 router.get('/applications/my', authenticateToken, async (req, res) => {
   try {
     const [applications] = await db.execute(`
-      SELECT ja.*, j.title as jobTitle, j.company, j.location, j.salary
+      SELECT ja.*, j.title as jobTitle, j.company, j.location, j.salary, j.imageUrl as companyLogo
       FROM job_applications ja
       JOIN jobs j ON ja.jobId = j.id
       WHERE ja.userId = ?
@@ -79,24 +82,91 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === "application/pdf") {
+      cb(null, true);
+    } else {
+      cb(new Error("Only PDF files allowed"), false);
+    }
+  },
+});
+
+// Cancel (withdraw) an application
+router.delete('/applications/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Only allow cancel if status is pending and belongs to logged-in user
+    const [result] = await db.execute(
+      `DELETE FROM job_applications 
+       WHERE id = ? AND userId = ? AND status = 'pending'`,
+      [id, req.user.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ message: 'Application not found or cannot be cancelled' });
+    }
+
+    res.json({ message: 'Application cancelled successfully' });
+  } catch (error) {
+    console.error('Cancel application error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 // Apply for job
-router.post('/:id/apply', authenticateToken, async (req, res) => {
+router.post("/:id/apply", authenticateToken, upload.single("cv"), async (req, res) => {
   try {
     const jobId = req.params.id;
     const userId = req.user.id;
+    const { name, email } = req.body;
+    const cvFile = req.file ? req.file.filename : null;
 
-    const [jobs] = await db.execute('SELECT id FROM jobs WHERE id = ? AND isActive = true', [jobId]);
-    if (jobs.length === 0) return res.status(404).json({ message: 'Job not found' });
+    // Validate required fields
+    if (!name || !email || !cvFile) {
+      return res.status(400).json({ message: "Name, email, and CV are required" });
+    }
 
-    const [existing] = await db.execute('SELECT id FROM job_applications WHERE jobId = ? AND userId = ?', [jobId, userId]);
-    if (existing.length > 0) return res.status(400).json({ message: 'Already applied' });
+    // Check if job exists and active
+    const [jobs] = await db.execute(
+      "SELECT id FROM jobs WHERE id = ? AND isActive = true",
+      [jobId]
+    );
+    if (jobs.length === 0) return res.status(404).json({ message: "Job not found" });
 
-    const [result] = await db.execute('INSERT INTO job_applications (jobId, userId) VALUES (?, ?)', [jobId, userId]);
+    // Check if user already applied
+    const [existing] = await db.execute(
+      "SELECT id FROM job_applications WHERE jobId = ? AND userId = ?",
+      [jobId, userId]
+    );
+    if (existing.length > 0) return res.status(400).json({ message: "Already applied" });
 
-    res.status(201).json({ message: 'Application submitted', applicationId: result.insertId });
+    // Insert into DB
+    const [result] = await db.execute(
+      `INSERT INTO job_applications (jobId, userId, name, email, cv, status, appliedDate) 
+       VALUES (?, ?, ?, ?, ?, 'pending', NOW())`,
+      [jobId, userId, name, email, cvFile]
+    );
+
+    res.status(201).json({
+      message: "Application submitted",
+      applicationId: result.insertId,
+    });
   } catch (error) {
-    console.error('Apply job error:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Apply job error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

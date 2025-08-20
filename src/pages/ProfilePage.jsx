@@ -72,14 +72,14 @@ const ProfilePage = () => {
                   <>
                     <button
                       onClick={handleSave}
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      className="inline-flex items-center px-4 py-2 bg-yellow-500 text-white rounded-[2px] hover:bg-yellow-600 transition-colors"
                     >
                       <Save className="h-4 w-4 mr-2" />
                       Save Changes
                     </button>
                     <button
                       onClick={handleCancel}
-                      className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                      className="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-[2px] hover:bg-red-600 transition-colors"
                     >
                       <X className="h-4 w-4 mr-2" />
                       Cancel
@@ -88,7 +88,7 @@ const ProfilePage = () => {
                 ) : (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-[2px] hover:bg-green-600 transition-colors"
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit Profile
@@ -103,11 +103,11 @@ const ProfilePage = () => {
               {/* Profile Photo */}
               <div className="flex items-center space-x-6">
                 <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="h-12 w-12 text-blue-600" />
+                  <User className="h-12 w-12 text-green-600" />
                 </div>
                 {isEditing && (
                   <div>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-[2px] hover:bg-green-600 transition-colors">
                       Change Photo
                     </button>
                     <p className="text-sm text-gray-600 mt-2">JPG, GIF or PNG. Max size 2MB</p>
@@ -297,7 +297,7 @@ const ProfilePage = () => {
                     </div>
                     <button
                       onClick={handleDeleteAccount}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                      className="bg-red-500 text-white px-4 py-2 rounded-[2px] hover:bg-red-600 transition-colors"
                     >
                       Delete Account
                     </button>

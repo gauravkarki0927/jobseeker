@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Briefcase, User, CheckCircle, Clock, X } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState, useEffect } from "react";
+import { Briefcase, User, CheckCircle, Clock, X } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { cancelApplication, getUserApplications } from "../services/userApplicationHandler";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -9,7 +10,7 @@ const Dashboard = () => {
     totalApplications: 0,
     pendingApplications: 0,
     acceptedApplications: 0,
-    rejectedApplications: 0
+    rejectedApplications: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -19,55 +20,60 @@ const Dashboard = () => {
 
   const fetchUserApplications = async () => {
     try {
-      // Mock data for demonstration
-      const mockApplications = [
-        {
-          id: 1,
-          jobTitle: 'Frontend Developer',
-          company: 'Tech Corp',
-          status: 'pending',
-          appliedDate: '2024-01-15'
-        },
-        {
-          id: 2,
-          jobTitle: 'UI/UX Designer',
-          company: 'Design Studio',
-          status: 'accepted',
-          appliedDate: '2024-01-10'
-        },
-        {
-          id: 3,
-          jobTitle: 'Full Stack Developer',
-          company: 'StartupXYZ',
-          status: 'rejected',
-          appliedDate: '2024-01-05'
-        }
-      ];
+      const userApplications = await getUserApplications();
+      setApplications(userApplications);
 
-      setApplications(mockApplications);
-      
       // Calculate stats
       const stats = {
-        totalApplications: mockApplications.length,
-        pendingApplications: mockApplications.filter(app => app.status === 'pending').length,
-        acceptedApplications: mockApplications.filter(app => app.status === 'accepted').length,
-        rejectedApplications: mockApplications.filter(app => app.status === 'rejected').length
+        totalApplications: userApplications.length,
+        pendingApplications: userApplications.filter(
+          (app) => app.status === "pending"
+        ).length,
+        acceptedApplications: userApplications.filter(
+          (app) => app.status === "accepted"
+        ).length,
+        rejectedApplications: userApplications.filter(
+          (app) => app.status === "rejected"
+        ).length,
       };
       setStats(stats);
     } catch (error) {
-      console.error('Error fetching applications:', error);
+      console.error("Error fetching applications:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCancel = async (applicationId) => {
+    if (!window.confirm("Are you sure you want to cancel this application?"))
+      return;
+
+    try {
+      await cancelApplication(applicationId);
+
+      // Update state locally
+      setApplications((prev) =>
+        prev.filter((app) => app.id !== applicationId)
+      );
+
+      // Update stats after cancel
+      setStats((prev) => ({
+        ...prev,
+        totalApplications: prev.totalApplications - 1,
+        pendingApplications: prev.pendingApplications - 1,
+      }));
+    } catch (error) {
+      console.error("Error cancelling application:", error);
+    }
+  };
+
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return <Clock className="h-5 w-5 text-yellow-500" />;
-      case 'accepted':
+      case "accepted":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'rejected':
+      case "rejected":
         return <X className="h-5 w-5 text-red-500" />;
       default:
         return <Clock className="h-5 w-5 text-gray-500" />;
@@ -76,14 +82,14 @@ const Dashboard = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'accepted':
-        return 'bg-green-100 text-green-800';
-      case 'rejected':
-        return 'bg-red-100 text-red-800';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "accepted":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -103,7 +109,7 @@ const Dashboard = () => {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <User className="h-8 w-8 text-blue-600" />
+                <User className="h-8 w-8 text-green-600" />
               </div>
             </div>
             <div className="ml-6">
@@ -125,8 +131,12 @@ const Dashboard = () => {
                 <Briefcase className="h-8 w-8 text-blue-600" />
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Applications</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.totalApplications}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Applications
+                </p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {stats.totalApplications}
+                </p>
               </div>
             </div>
           </div>
@@ -138,7 +148,9 @@ const Dashboard = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.pendingApplications}</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {stats.pendingApplications}
+                </p>
               </div>
             </div>
           </div>
@@ -150,7 +162,9 @@ const Dashboard = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Accepted</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.acceptedApplications}</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {stats.acceptedApplications}
+                </p>
               </div>
             </div>
           </div>
@@ -162,7 +176,9 @@ const Dashboard = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Rejected</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.rejectedApplications}</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {stats.rejectedApplications}
+                </p>
               </div>
             </div>
           </div>
@@ -171,39 +187,87 @@ const Dashboard = () => {
         {/* Recent Applications */}
         <div className="bg-white rounded-lg shadow-md">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Applications</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              Recent Applications
+            </h2>
           </div>
           <div className="p-6">
             {applications.length === 0 ? (
               <div className="text-center py-8">
                 <Briefcase className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No applications yet</h3>
-                <p className="text-gray-600">Start applying to jobs to see them here.</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No applications yet
+                </h3>
+                <p className="text-gray-600">
+                  Start applying to jobs to see them here.
+                </p>
               </div>
             ) : (
               <div className="space-y-4">
                 {applications.map((application) => (
-                  <div key={application.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div
+                    key={application.id}
+                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
+                        {/* Company / Job Image */}
+                        {application.companyLogo ? (
+                          <img
+                            src={application.companyLogo}
+                            alt={application.company}
+                            className="w-16 h-16 rounded-md object-contain"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-md bg-gray-200 flex items-center justify-center text-gray-500">
+                            <Briefcase className="h-8 w-8" />
+                          </div>
+                        )}
                         <div className="flex items-center">
-                          <h3 className="text-lg font-medium text-gray-900">{application.jobTitle}</h3>
+                          <h3 className="text-lg font-medium text-gray-900">
+                            {application.jobTitle}
+                          </h3>
                           <span className="ml-3 flex items-center">
                             {getStatusIcon(application.status)}
                           </span>
                         </div>
                         <p className="text-gray-600 mt-1">{application.company}</p>
+
+                        {/* NEW details */}
+                        <p className="text-sm text-gray-500 mt-1">
+                          📍 {application.location}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          💰 {application.salary ? `Rs.${application.salary}` : "Not specified"}
+                        </p>
+
                         <p className="text-sm text-gray-500 mt-2">
                           Applied on {new Date(application.appliedDate).toLocaleDateString()}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 ml-4">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${getStatusColor(application.status)}`}>
+
+                      <div className="flex items-center space-x-3">
+                        <span
+                          className={`px-3 py-2 rounded-[2px] text-sm font-medium capitalize ${getStatusColor(
+                            application.status
+                          )}`}
+                        >
                           {application.status}
                         </span>
+
+                        {/* Cancel button only if pending */}
+                        {application.status === "pending" && (
+                          <button
+                            onClick={() => handleCancel(application.id)}
+                            className="px-3 py-2 bg-red-500 text-white text-sm rounded-[2px] hover:bg-red-600"
+                          >
+                            Cancel
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
+
                 ))}
               </div>
             )}

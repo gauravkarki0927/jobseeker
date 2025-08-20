@@ -28,18 +28,18 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <Briefcase className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">Job<span className="text-blue-600">Seeker</span></span>
+              <Briefcase className="h-8 w-8 text-green-500" />
+              <span className="ml-2 text-xl font-bold text-gray-900">Job<span className="text-green-500">Seeker</span></span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-2">
             {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                className="text-gray-600 hover:text-green-600 px-3 py-2 text-sm font-medium transition-colors"
               >
                 {item.name}
               </a>
@@ -52,9 +52,9 @@ const Navbar = () => {
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 focus:outline-none"
+                  className="flex items-center space-x-2 text-gray-600 hover:text-green-600 focus:outline-none"
                 >
-                  <User className="h-5 w-5" />
+                  <User className="h-5 text-green-600 w-5" />
                   <span className="text-sm font-medium">{user.firstName}</span>
                 </button>
 
@@ -100,13 +100,13 @@ const Navbar = () => {
               <div className="flex items-center space-x-4">
                 <Link
                   to="/login"
-                  className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+                  className="text-gray-600 hover:text-green-600 px-3 py-2 text-sm font-medium"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-[2px] text-sm font-medium hover:bg-blue-700 transition-colors"
+                  className="bg-green-500 text-white px-4 py-2 rounded-[2px] text-sm font-medium hover:bg-green-600 transition-colors"
                 >
                   Sign Up
                 </Link>
@@ -118,7 +118,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-600 hover:text-blue-600 focus:outline-none focus:text-blue-600"
+              className="text-gray-600 hover:text-green-600 outline-none"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>

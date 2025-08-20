@@ -78,7 +78,7 @@ const AnalyticsDashboard = () => {
           <div className="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Weekly User Activity</h3>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={userActivityData}>
+              <LineChart data={userActivityData} >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="day" />
                 <YAxis />
