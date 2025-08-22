@@ -5,24 +5,20 @@ const bcrypt = require('bcryptjs');
 dotenv.config();
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,   // important for Railway
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  connectionLimit: 10,
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'jobseeker_db',
+  port: process.env.DB_PORT || 3306
 });
-
-export default pool;
-
 
 const testConnection = async () => {
   try {
     const connection = await pool.getConnection();
-    console.log('✅ Database connected successfully');
+    console.log('Database connected successfully');
     connection.release();
   } catch (error) {
-    console.error('❌ Database connection failed:', error.message);
+    console.error('Database connection failed:', error.message);
     process.exit(1);
   }
 };
@@ -101,7 +97,7 @@ const initializeDatabase = async () => {
         VALUES (?, ?, ?, ?, ?)
       `, ['Admin', 'User', 'admin@jobseeker.com', hashedPassword, 'admin']);
       
-      console.log('✅ Default admin user created (admin@jobseeker.com / admin123)');
+      console.log('Default admin user created (admin@jobseeker.com / admin123)');
     }
 
     // Create default test user
@@ -119,7 +115,7 @@ const initializeDatabase = async () => {
         VALUES (?, ?, ?, ?, ?)
       `, ['Test', 'User', 'user@jobseeker.com', hashedPassword, 'user']);
       
-      console.log('✅ Default test user created (user@jobseeker.com / user123)');
+      console.log('Default test user created (user@jobseeker.com / user123)');
     }
 
     // Insert sample jobs
@@ -211,13 +207,13 @@ const initializeDatabase = async () => {
         ]);
       }
 
-      console.log('✅ Sample jobs inserted successfully');
+      console.log('Sample jobs inserted successfully');
     }
 
     connection.release();
-    console.log('✅ Database initialized successfully');
+    console.log('Database initialized successfully');
   } catch (error) {
-    console.error('❌ Database initialization failed:', error.message);
+    console.error('Database initialization failed:', error.message);
     process.exit(1);
   }
 };
