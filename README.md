@@ -27,11 +27,10 @@ A comprehensive job portal web application built with React.js, Node.js, Express
 - **Input Validation**: Client and server-side validation using Joi
 - **Error Handling**: Comprehensive error handling and user feedback
 
-## 🛠 Technology Stack
+## 🛠 Technology Stack [Packages]
 
 ### Frontend
 - **React.js** - Modern JavaScript library for building user interfaces
-- **TypeScript** - Type-safe JavaScript development
 - **Tailwind CSS** - Utility-first CSS framework for styling
 - **Lucide React** - Beautiful and customizable icons
 - **React Router DOM** - Client-side routing
@@ -104,7 +103,7 @@ DB_PASSWORD=your_mysql_password
 DB_NAME=jobseeker_db
 DB_PORT=3306
 
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_SECRET=job_swcret_key_1990
 JWT_EXPIRE=7d
 
 PORT=5000
@@ -237,7 +236,6 @@ CREATE TABLE job_applications (
 - **JWT Authentication**: Secure token-based authentication
 - **Password Hashing**: bcryptjs for secure password storage
 - **Input Validation**: Server and client-side validation
-- **Rate Limiting**: Request rate limiting to prevent abuse
 - **CORS Configuration**: Proper cross-origin resource sharing
 - **Helmet Middleware**: Security headers and protection
 - **SQL Injection Protection**: Parameterized queries
@@ -245,7 +243,6 @@ CREATE TABLE job_applications (
 ## 📈 Performance Optimizations
 
 - **Connection Pooling**: MySQL connection pooling for better performance
-- **Pagination**: Efficient data loading with pagination
 - **Image Optimization**: Optimized image loading from external sources
 - **Code Splitting**: Efficient bundle loading with Vite
 - **Caching**: Browser caching for static assets
@@ -284,14 +281,6 @@ The backend can be deployed to platforms like Heroku, DigitalOcean, or AWS:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 📞 Support
-
-For support, please contact the development team or create an issue in the repository.
-
 ## 🔄 Future Enhancements
 
 - **Email Notifications**: Notify users of application status changes
@@ -302,3 +291,4 @@ For support, please contact the development team or create an issue in the repos
 - **Social Login**: OAuth integration with Google, LinkedIn, etc.
 - **Mobile App**: React Native mobile application
 - **API Documentation**: Comprehensive API documentation with Swagger
+ (continuation)
