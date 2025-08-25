@@ -21,7 +21,7 @@ const AddJobModal = ({ onClose, onSubmit }) => {
   const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Freelance'];
   const seniorityLevels = ['Intern', 'Junior', 'Mid-Level', 'Senior'];
 
-  // ✅ Validation rules
+  // Validation rules
   const validate = () => {
     const newErrors = {};
 

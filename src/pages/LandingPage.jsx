@@ -101,7 +101,7 @@ const LandingPage = () => {
         if (job.employmentType) suggestionSet.add(job.employmentType);
         if (job.seniorityLevel) suggestionSet.add(job.seniorityLevel);
         if (job.location) suggestionSet.add(job.location);
-        suggestionSet.add(job.isRemote ? "remote" : "onsite"); // ✅ lowercase to match filtering
+        suggestionSet.add(job.isRemote ? "remote" : "onsite"); // lowercase to match filtering
       });
 
       setSuggestions(Array.from(suggestionSet).slice(0, 8)); // max 8 suggestions
