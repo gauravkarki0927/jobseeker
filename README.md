@@ -285,7 +285,6 @@ The backend can be deployed to platforms like Heroku, DigitalOcean, or AWS:
 
 - **Email Notifications**: Notify users of application status changes
 - **Advanced Filtering**: More sophisticated search and filtering options
-- **File Upload**: Resume upload functionality
 - **Real-time Chat**: Communication between employers and candidates
 - **Advanced Analytics**: More detailed analytics and reporting
 - **Social Login**: OAuth integration with Google, LinkedIn, etc.
